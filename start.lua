@@ -191,7 +191,7 @@ elseif redis:get(bot_id.."Del:Screen"..msg.chat_id..":"..msg.sender.user_id) the
 redis:del(bot_id.."Del:Screen"..msg.chat_id..":"..msg.sender.user_id) 
 u = '*✫︙ تم الغاء الطلب بنجاح.*'
 else
-u = '*⌔︙أهلا بك في صانع بوتات الحمايه 👋🏻 ،\n\n⌔︙البوت مقدم من قناة »* [• Mshaeir | مشاعر](t.me/T4LT3) \n\n*⌔︙يمكنك الان صنع بوت واحد فقط من صانع البوتات\n\n     عليك  ❲ استخدام اوامر التحكم اسفل وبدء ❳\n⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯*\n[⌔︙ كروب سورس اذا عدك مشكلة تابع ل • Mshaeir | مشاعر ](https://t.me/+v-HQM7BmtQYzZDRi)'
+u = '*✫︙أهلا بك في صانع بوتات الحمايه 👋🏻 ،\n\n✫︙البوت مقدم من قناة »* [. 𝐒𝐎𝐔𝐑𝐂𝐄 𝐎𝐏](t.me/t_8_t_t) \n\n*✫︙يمكنك الان صنع بوت واحد فقط من صانع البوتات\n\n     عليك استخدام اوامر التحكم اسفل وبدء الانشاء🔻\n⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯*\n[✫︙ Gruop The Suport Maker .](https://t.me/v_o_t_l)'
 end
 bot.sendText(msg.chat_id,msg.id,""..u.."", 'md', true , false, false, false, reply_markup)
 return false
@@ -426,7 +426,6 @@ NameBot = NameBot:gsub('*','')
 redis:del(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) 
 redis:set(bot_id.."Send:UserName"..msg.chat_id..":"..msg.sender.user_id,'true1') 
 redis:set(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id,text) 
-
 bot.sendText(msg.chat_id,msg.id,'*🔘꒐ تم حفظ توكن البوت بنجاح .\n\n📜꒐معلومات البوت التالية : \n\n• اسم البوت ›* ['..NameBot..'](t.me/'..UserNameBot..')\n*• معرف البوت ›* [@'..UserNameBot..']\n\n*📮꒐ ارسل لي معرف المطور ..*', 'md', false, false, false, false, reply_markup)
 return false
 end
