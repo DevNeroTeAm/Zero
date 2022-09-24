@@ -16,7 +16,7 @@ memUsedPrc=io.popen([[echo `free -m | awk 'NR==2{printf "%sMB/%sMB ( %.2f% )\n",
 -------------------------------------------------------------------
 Runbot = require('luatele')
 -------------------------------------------------------------------
-local infofile = io.open("./sudo.lua","r")
+local infofile = io.open("./Information.lua","r")
 if not infofile then
 if not redis:get(Server_Done.."token") then
 os.execute('sudo rm -rf setup.lua')
@@ -51,7 +51,7 @@ os.execute('lua5.3 start.lua')
 end
 local url , res = https.request('https://api.telegram.org/bot'..redis:get(Server_Done.."token")..'/getMe')
 local Json_Info = JSON.decode(url)
-local Inform = io.open("sudo.lua", 'w')
+local Inform = io.open("Information.lua", 'w')
 Inform:write([[
 return {
 	
@@ -84,7 +84,7 @@ redis:del(Server_Done.."token")
 os.execute('cp -a ../uu/ ../'..Json_Info.result.username..' && rm -fr ~/uu')
 os.execute('cd && cd '..Json_Info.result.username..';chmod +x start;chmod +x Run;./Run')
 end
-Information = dofile('./sudo.lua')
+Information = dofile('./Information.lua')
 sudoid = Information.id
 Token = Information.Token
 bot_id = Token:match("(%d+)")
@@ -372,7 +372,7 @@ redis:del(bot_id.."Send:UserName"..msg.chat_id..":"..msg.sender.user_id)
 local url , res = https.request('https://api.telegram.org/bot'..redis:get(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id)..'/getMe')
 local Jsonfo = JSON.decode(url)
 Sudo  = UserId_Info.id
-file = io.open("./Files/sudo.lua", "w")  
+file = io.open("./Files/Information.lua", "w")  
 file:write([[
 return {
 	
@@ -583,7 +583,7 @@ else
 local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
 local Jsonfo = JSON.decode(url)
 Sudo  = msg.sender.user_id
-file = io.open("./Files/sudo.lua", "w")  
+file = io.open("./Files/Information.lua", "w")  
 file:write([[
 return {
 	
@@ -667,19 +667,19 @@ else
 return bot.sendText(msg.chat_id,msg.id,'*⌔︙ عذرا لا تمتلك بوت بالفعل .*', 'md', false, false, false, false, reply_markun)
 end
 end
-if text == '❲ عمل رن ❳' then
+if text == 'عمل رن ⚙' then
 if redis:get(bot_id..":Bot:"..msg.sender.user_id) then
 u , res = https.request('https://api.telegram.org/bot'..redis:get(bot_id..":Bot:"..msg.sender.user_id)..'/getMe')
 JsonSInfo = JSON.decode(u)
-UserBot = string.upper(JsonSInfo['result']['username'])
-os.execute('screen -S '..UserBot..' -X kill')
-os.execute('cd && cd '..UserBot..';screen -d -m -S '..UserBot..' lua5.3 Snaybir.lua')
-return LuaTele.sendText(msg.chat_id,msg.id,'*⌔︙تم تشغيل البوت بنجاح . .*', 'md')
+useyu = string.upper(JsonSInfo['result']['username'])
+os.execute('screen -S '..useyu..' -X kill')
+os.execute('cd && cd '..useyu..';screen -d -m -S '..useyu..' lua5.3 start.lua')
+return bot.sendText(msg.chat_id,msg.id,'*✫︙تم تشغيل البوت بنجاح . .*', 'md')
 else
-return LuaTele.sendText(msg.chat_id,msg.id,'⌔︙عذرا لا تمتلك بوت لعمل رن .', 'md', false, false, false, false, reply_markun)
+return bot.sendText(msg.chat_id,msg.id,'✫︙ عذرا لا تمتلك بوت لعمل رن .', 'md', false, false, false, false, reply_markun)
 end
 end
-end --- end not Devloper
+end --- end not devB(
 end --- end type == "basicgroup"
 end --- end Run(
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
