@@ -413,8 +413,9 @@ NameBot = NameBot:gsub("'",'')
 NameBot = NameBot:gsub('`','') 
 NameBot = NameBot:gsub('*','') 
 redis:set(bot_id..":Bot:"..msg.sender.user_id,useyu)
-redis:del(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) o
-LuaTele.sendText(msg.chat_id,msg.id,'*⌔︙ تم حفظ توكن البوت بنجاح .\n\n⌔︙معلومات البوت التالية : \n\n• اسم البوت ›* ['..NameBot..'](t.me/'..UserNameBot..')\n*• معرف البوت ›* [@'..UserNameBot..']\n\n*⌔︙ ارسل لي معرف المطور ..*', 'md', true)
+redis:del(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) 
+bot.sendText(msg.chat_id,msg.id,"*✫︙ تم صنع البوت الخاص بك بنجاح .*\n\n- أسم البوت › ["..NameBot.."](t.me/"..UserNameBot..")\n\n- معرف البوت › @["..UserNameBot.."]", 'md', false, false, false, false, reply_markun)
+bot.sendText(Sudo_Id,msg.id,"*✫︙ قام شخص بصنع بوت جديد .. *\n\n*✫︙ اسم البوت ›* ["..NameBot.."](t.me/"..UserNameBot..")\n\n*✫︙ معرف البوت ›* @["..UserNameBot.."] .", 'md', false, false, false, false, reply_markup)
 return false
 end
 end
