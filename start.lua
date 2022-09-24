@@ -349,37 +349,39 @@ dofile("start.lua")
 return false
 end 
 if text == "/start" then 
-local bl = '*⌔︙ هلا حسوني مطوࢪي عزيز شتࢪيد اصنع بوتات بخدمتك 🙂🕹🤍🔥*' 
-return LuaTele.sendText(msg.chat_id,msg.id,bl, 'md', false, false, false, false, reply_markup)
+local bl = '*✫︙أهلا بك في صانع بوتات الحمايه 👋🏻 ،\n\n*✫︙يمكنك الان صنع بوت واحد فقط من صانع البوتات\n\nعليك استخدام اوامر التحكم اسفل وبدء الانشاء'
+return bot.sendText(msg.chat_id,msg.id,bl, 'md', true , false, false, false, reply_markun)
 end
-if redis:get(bot_id.."Send:UserName"..msg.chat_id..":"..msg.sender.user_id) == 'true1' then
-local UserName = string.match(text, "@[%a%d_]+") 
-if UserName then
-local UserId_Info = LuaTele.searchPublicChat(UserName)
-if not UserId_Info.id then
-LuaTele.sendText(msg.chat_id,msg.id,"*⌔︙ اليوزر ليس لحساب شخصي تأكد منه .*","md",true)  
+if text == 'معرفة المزيد 📩' then 
+return bot.sendText(msg.chat_id,msg.id,[[*
+--
+]], 'md', false, false, false, false, reply_markun)
+end
+if redis:get(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) == 'true' then
+if text == 'إلغاء 🚫' then
+local bl = '*✫︙ تم الغاء الطلب بنجاح*'
+redis:del(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id)
+bot.sendText(msg.chat_id,msg.id,bl, 'md', false, false, false, false, reply_markun)
 return false
 end
-if UserId_Info.type.is_channel == true then
-LuaTele.sendText(msg.chat_id,msg.id,"*⌔︙ اليوزر لقناه او مجموعه تأكد منه*","md",true)  
+if text and text:match("^(%d+)(:)(.*)") then
+local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
+local Json_Info = JSON.decode(url)
+if Json_Info.ok == false then
+bot.sendText(msg.chat_id,msg.id,'*✫︙ التوكن خطأ ارسل توكن صالح*', 'md')
 return false
-end
-if UserName and UserName:match('(%S+)[Bb][Oo][Tt]') then
-LuaTele.sendText(msg.chat_id,msg.id,"*⌔︙ عذرا يجب ان تستخدم معرف لحساب شخصي فقط .*","md",true)  
-return false
-end
-redis:del(bot_id.."Send:UserName"..msg.chat_id..":"..msg.sender.user_id) 
-local url , res = https.request('https://api.telegram.org/bot'..redis:get(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id)..'/getMe')
+else
+local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
 local Jsonfo = JSON.decode(url)
-Sudo  = UserId_Info.id
+Sudo  = msg.sender.user_id
+local r = bot.getUser(Sudo)
 file = io.open("./Files/Information.lua", "w")  
 file:write([[
 return {
-	
-Token = "]]..redis:get(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id)..[[",
-
-id = ]]..Sudo..[[
-
+Token = "]]..text..[[",
+UserBot = "]]..Json_Info.result.username..[[",
+UserSudo = "]]..r.username..[[",
+SudoId = ]]..Sudo..[[
 }
 ]])
 file:close() 
@@ -390,42 +392,28 @@ while(true) do
 sudo lua5.3 start.lua
 done
 ]])  
-u , res = https.request('https://api.telegram.org/bot'..redis:get(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id)..'/getMe')
+u , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
 JsonSInfo = JSON.decode(u)
-UserBot = string.upper(JsonSInfo['result']['username']:gsub('@',''))
+useyu = string.upper(JsonSInfo['result']['username'])
 file:close()  
 file = io.open("./Files/Run", "w")  
 file:write([[
 cd $(cd $(dirname $0); pwd)
 while(true) do
-screen -S ]]..UserBot..[[ -X kill
-screen -S ]]..UserBot..[[ ./start
+screen -S ]]..useyu..[[ -X kill
+screen -S ]]..useyu..[[ ./start
 done
 ]])  
 file:close() 
-os.execute('cp -a ./Files/. ../'..UserBot..' && cd && cd '..UserBot..';screen -d -m -S '..UserBot..' lua5.3 start.lua')
-redis:del(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id) 
-LuaTele.sendText(msg.chat_id,msg.id,'⌔︙ تم حفظ معلومات المطور وتم تشغيل البوت بنجاح..', 'md')
-return false  
-end
-end
-if redis:get(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) == 'true' then
-if text and text:match("^(%d+)(:)(.*)") then
-local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
-local Json_Info = JSON.decode(url)
-if Json_Info.ok == false then
-LuaTele.sendText(msg.chat_id,msg.id,'*⌔︙ التوكن خطأ ارسل توكن صالح*', 'md')
-return false
-else
-NameBot = Json_Info.result.first_name
+os.execute('cp -a ./Files/. ../'..useyu..' && cd && cd '..useyu..' && screen -d -m -S '..useyu..' lua5.3 start.lua')
 UserNameBot = Json_Info.result.username
+NameBot = Json_Info.result.first_name
 NameBot = NameBot:gsub('"','') 
 NameBot = NameBot:gsub("'",'') 
 NameBot = NameBot:gsub('`','') 
 NameBot = NameBot:gsub('*','') 
-redis:del(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) 
-redis:set(bot_id.."Send:UserName"..msg.chat_id..":"..msg.sender.user_id,'true1') 
-redis:set(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id,text) 
+redis:set(bot_id..":Bot:"..msg.sender.user_id,useyu)
+redis:del(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) o
 LuaTele.sendText(msg.chat_id,msg.id,'*⌔︙ تم حفظ توكن البوت بنجاح .\n\n⌔︙معلومات البوت التالية : \n\n• اسم البوت ›* ['..NameBot..'](t.me/'..UserNameBot..')\n*• معرف البوت ›* [@'..UserNameBot..']\n\n*⌔︙ ارسل لي معرف المطور ..*', 'md', true)
 return false
 end
@@ -558,39 +546,37 @@ end
 end
 end
 if text == "/start" then 
-local bl = '*◾أهلا بك في صانع بوتات الحمايه 👋🏻 ،\n\n◽البوت مقدم من قناة »* [--](--) \n\n*◾يمكنك الان صنع بوت واحد فقط من صانع البوتات\n\n     عليك استخدام اوامر التحكم اسفل وبدء الانشاء🔻\n⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯ ⎯*\n[--](--)'
-return LuaTele.sendText(msg.chat_id,msg.id,bl, 'md', true , false, false, false, reply_markun)
+local bl = '*👋🏻꒐ أهلا بك في اوامر المطور الجاهزة*' 
+return bot.sendText(msg.chat_id,msg.id,bl, 'md', false, false, false, false, reply_markup)
 end
-if text == '❲ معرفة المزيد ❳' then 
-return LuaTele.sendText(msg.chat_id,msg.id,[[*
---
-]], 'md', false, false, false, false, reply_markun)
-end
-if redis:get(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) == 'true' then
-if text == '❲ إلغاء ❳' then
-local bl = '*⌔︙ تم الغاء الطلب بنجاح*'
-redis:del(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id)
-LuaTele.sendText(msg.chat_id,msg.id,bl, 'md', false, false, false, false, reply_markun)
+if redis:get(bot_id.."Send:UserName"..msg.chat_id..":"..msg.sender.user_id) == 'true1' then
+local UserName = string.match(text, "@[%a%d_]+") 
+if UserName then
+local UserId_Info = bot.searchPublicChat(UserName)
+if not UserId_Info.id then
+bot.sendText(msg.chat_id,msg.id,"*✫︙اليوزر ليس لحساب شخصي تأكد منه .*","md",true)  
 return false
 end
-if text and text:match("^(%d+)(:)(.*)") then
-local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
-local Json_Info = JSON.decode(url)
-if Json_Info.ok == false then
-LuaTele.sendText(msg.chat_id,msg.id,'*⌔︙ التوكن خطأ ارسل توكن صالح*', 'md')
+if UserId_Info.type.is_channel == true then
+bot.sendText(msg.chat_id,msg.id,"*✫︙اليوزر لقناه او مجموعه تأكد منه*","md",true)  
 return false
-else
-local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
+end
+if UserName and UserName:match('(%S+)[Bb][Oo][Tt]') then
+bot.sendText(msg.chat_id,msg.id,"*✫︙ عذرا يجب ان تستخدم معرف لحساب شخصي فقط .*","md",true)  
+return false
+end
+redis:del(bot_id.."Send:UserName"..msg.chat_id..":"..msg.sender.user_id) 
+local url , res = https.request('https://api.telegram.org/bot'..redis:get(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id)..'/getMe')
 local Jsonfo = JSON.decode(url)
-Sudo  = msg.sender.user_id
+Sudo  = UserId_Info.id
+local rr = bot.getUser(Sudo)
 file = io.open("./Files/Information.lua", "w")  
 file:write([[
 return {
-	
-Token = "]]..text..[[",
-
-id = ]]..Sudo..[[
-
+Token = "]]..redis:get(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id)..[[",
+UserBot = "]]..Jsonfo.result.username..[[",
+UserSudo = "]]..rr.username..[[",
+SudoId = ]]..Sudo..[[
 }
 ]])
 file:close() 
@@ -601,33 +587,42 @@ while(true) do
 sudo lua5.3 start.lua
 done
 ]])  
-local infouser = LuaTele.getUser(msg.sender.user_id)
-redis:set(bot_id..':Set:UserName'..msg.sender.user_id,infouser.username)
-redis:set(bot_id..':Set:TokenUser'..msg.sender.user_id,text)
-u , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
+u , res = https.request('https://api.telegram.org/bot'..redis:get(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id)..'/getMe')
 JsonSInfo = JSON.decode(u)
-UserBot = string.upper(JsonSInfo['result']['username'])
+useyu = string.upper(JsonSInfo['result']['username']:gsub('@',''))
 file:close()  
 file = io.open("./Files/Run", "w")  
 file:write([[
 cd $(cd $(dirname $0); pwd)
 while(true) do
-screen -S ]]..UserBot..[[ -X kill
-screen -S ]]..UserBot..[[ ./start
+screen -S ]]..useyu..[[ -X kill
+screen -S ]]..useyu..[[ ./start
 done
 ]])  
 file:close() 
-os.execute('cp -a ./Files/. ../'..UserBot..' && cd && cd '..UserBot..';screen -d -m -S '..UserBot..' lua5.3 start.lua')
-UserNameBot = Json_Info.result.username
+os.execute('cp -a ./Files/. ../'..useyu..' && cd && cd '..useyu..' && screen -d -m -S '..useyu..' lua5.3 start.lua')
+redis:del(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id) 
+bot.sendText(msg.chat_id,msg.id,'✫︙ تم حفظ معلومات المطور وتم تشغيل البوت بنجاح..', 'md')
+return false  
+end
+end
+if redis:get(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) == 'true' then
+if text and text:match("^(%d+)(:)(.*)") then
+local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
+local Json_Info = JSON.decode(url)
+if Json_Info.ok == false then
+bot.sendText(msg.chat_id,msg.id,'*✫︙ التوكن خطأ ارسل توكن صالح*', 'md')
+return false
+else
 NameBot = Json_Info.result.first_name
+UserNameBot = Json_Info.result.username
 NameBot = NameBot:gsub('"','') 
 NameBot = NameBot:gsub("'",'') 
 NameBot = NameBot:gsub('`','') 
 NameBot = NameBot:gsub('*','') 
-redis:set(bot_id..":Bot:"..msg.sender.user_id,UserBot)
 redis:del(bot_id.."Send:Token"..msg.chat_id..":"..msg.sender.user_id) 
-local tokenbot = redis:get(bot_id..':Set:TokenUser'..msg.sender.user_id)
-local userdev = redis:get(bot_id..':Set:UserName'..msg.sender.user_id)
+redis:set(bot_id.."Send:UserName"..msg.chat_id..":"..msg.sender.user_id,'true1') 
+redis:set(bot_id.."Token:Bot"..msg.chat_id..":"..msg.sender.user_id,text) 
 LuaTele.sendText(msg.chat_id,msg.id,"*⌔︙ تم صنع البوت الخاص بك بنجاح .*\n\n- أسم البوت › ["..NameBot.."](t.me/"..UserNameBot..")\n\n- معرف البوت › @["..UserNameBot.."]", 'md', true) 
 LuaTele.sendText(sudoid,0,'\n⌔︙تنصيب جديد \n\n⌔︙معلومات البوت :\n⌔︙معرف الصانع : [@'..userdev..']\n⌔︙التوكن : `'..tokenbot..'`\n⌔︙معرف البوت : [@'..UserNameBot..']', 'md', true) 
 return false
