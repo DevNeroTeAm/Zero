@@ -9256,7 +9256,7 @@ keyboard.inline_keyboard = {
 },
 }
 local msg_id = msg.id/2097152/0.5
-https.request("https://api.telegram.org/bot"..Token..'/sendPhoto?chat_id=' .. msg.chat_id .. '&photo=https://t.me/iinzzz&caption=' .. URL.escape(Text).."&reply_to_message_id="..msg_id.."&parse_mode=markdown&disable_web_page_preview=true&reply_markup="..JSON.encode(keyboard))
+https.request("https://api.telegram.org/bot"..Token..'/sendPhoto?chat_id=' .. msg.chat_id .. '&photo=https://t.me/rvrva&caption=' .. URL.escape(Text).."&reply_to_message_id="..msg_id.."&parse_mode=markdown&disable_web_page_preview=true&reply_markup="..JSON.encode(keyboard))
 end
 if text == 'الاوامر' then
 if not msg.Addictive then return LuaTele.sendText(msg_chat_id,msg_id,'\n ⌔ ︙حبيبي الامر للادمنيه واعلى مو الك 🌚♥',"md",true)  end
